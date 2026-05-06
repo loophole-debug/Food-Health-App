@@ -1,4 +1,3 @@
-# Food-Health-App
 # NutriSense Context Engine
 
 ## Problem Statement
