@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriSense Context Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #nudgeResult {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            background: rgba(0, 210, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .loader {
+            display: none;
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--text-muted);
+            border-bottom-color: var(--primary);
+            border-radius: 50%;
+            margin: 1rem auto;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>NutriSense</h1>
+            <p class="subtitle">AI-Powered Proactive Health Nudges</p>
+        </header>
+
+        <div class="glass-card">
+            <form id="nudgeForm">
+                <div class="form-group">
+                    <label for="time">Time of Day</label>
+                    <input type="time" id="time" value="14:30" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="mood">Current Mood</label>
+                    <select id="mood" required>
+                        <option value="stressed">Stressed</option>
+                        <option value="tired">Tired</option>
+                        <option value="happy">Happy</option>
+                        <option value="bored">Bored</option>
+                        <option value="hungry">Very Hungry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <select id="location" required>
+                        <option value="work">At Work</option>
+                        <option value="home">At Home</option>
+                        <option value="commute">Commuting</option>
+                        <option value="restaurant">At a Restaurant</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="submitBtn">Get Personalized Nudge</button>
+            </form>
+
+            <div class="loader" id="loader"></div>
+            <div id="nudgeResult"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('nudgeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const resultDiv = document.getElementById('nudgeResult');
+            
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            resultDiv.style.display = 'none';
+
+            const context = {
+                time: document.getElementById('time').value,
+                mood: document.getElementById('mood').value,
+                location_type: document.getElementById('location').value
+            };
+
+            try {
+                const response = await fetch('/nudge', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        user_id: 'demo_user',
+                        context: context
+                    })
+                });
+
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `<strong>✨ Insight:</strong><br><br>${data.nudge_text || "Take a deep breath and drink some water."}`;
+                resultDiv.style.display = 'block';
+            } catch (err) {
+                resultDiv.innerHTML = `<strong>Error:</strong> Could not connect to the engine.`;
+                resultDiv.style.display = 'block';
+            } finally {
+                btn.style.display = 'block';
+                loader.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
